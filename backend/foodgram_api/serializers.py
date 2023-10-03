@@ -354,7 +354,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
         return UserSerializer(
             instance.following,
             context={'request': self.context.get('request')}
-            ).data
+        ).data
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
@@ -381,7 +381,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
         return RecipeShortSerializer(
             instance.favorite_recipe,
             context={'request': self.context.get('request')}
-            ).data
+        ).data
 
 
 class ShoppingListSerializer(serializers.ModelSerializer):
@@ -408,4 +408,4 @@ class ShoppingListSerializer(serializers.ModelSerializer):
         return RecipeShortSerializer(
             instance.shop_recipe,
             context={'request': self.context.get('request')}
-            ).data
+        ).data

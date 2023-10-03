@@ -201,11 +201,11 @@ class ShoppingList(models.Model):
 
     class Meta:
         constraints = [
-                models.UniqueConstraint(
-                    fields=['user', 'shop_recipe'],
-                    name='unique_shop_recipe'
-                )
-            ]
+            models.UniqueConstraint(
+                fields=['user', 'shop_recipe'],
+                name='unique_shop_recipe'
+            )
+        ]
         ordering = ['id',]
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
