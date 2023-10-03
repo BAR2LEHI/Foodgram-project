@@ -6,7 +6,7 @@ class FoodGramUser(AbstractUser):
     USER = 'user'
     MODERATOR = 'moderator'
     ADMIN = 'admin'
-    
+
     ROLE_CHOICES = [
         (USER, 'user'),
         (MODERATOR, 'moderator'),
@@ -14,7 +14,7 @@ class FoodGramUser(AbstractUser):
     ]
 
     email = models.EmailField(
-        max_length=256, 
+        max_length=256,
         unique=True,
         verbose_name='Адрес электронной почты'
     )
@@ -35,12 +35,15 @@ class FoodGramUser(AbstractUser):
         default=0,
         verbose_name='Кол-во рецептов'
     )
+    is_subscribed = models.BooleanField(
+        verbose_name='Подписан ли',
+        default=False
+    )
 
     class Meta:
         verbose_name = 'Пользователь'
         ordering = ('username',)
         verbose_name_plural = 'Пользователи'
-
 
     def __str__(self):
         return f'{self.username}'

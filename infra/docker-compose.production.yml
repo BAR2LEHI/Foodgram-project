@@ -16,7 +16,7 @@ services:
   
   backend:
     container_name: foodgram_backend
-    build: ../backend/
+    image: bar2les/foodgram_backend
     env_file: 
       - ../.env
     volumes:
@@ -27,9 +27,7 @@ services:
 
   frontend:
     container_name: foodgram_frontend
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: bar2les/foodgram_frontend
     volumes:
       - ../frontend/:/app/result_build/
 
@@ -37,7 +35,7 @@ services:
     container_name: foodgram_nginx
     image: nginx:1.19.3
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - static:/var/html/static/
       - media:/var/html/media/

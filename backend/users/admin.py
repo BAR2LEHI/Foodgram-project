@@ -6,6 +6,7 @@ from .models import FoodGramUser
 @admin.register(FoodGramUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
+        'pk',
         'username',
         'email',
     )
