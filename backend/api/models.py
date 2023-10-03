@@ -14,6 +14,7 @@ class Recipe(models.Model):
     name = models.CharField(
         max_length=128,
         verbose_name='Название блюда',
+        unique=True
     )
     image = models.ImageField(
         verbose_name='Картинка блюда',
