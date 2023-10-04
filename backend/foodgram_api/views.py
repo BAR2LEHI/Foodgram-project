@@ -6,8 +6,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import (AllowAny, IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from api.models import (FavoriteRecipe, Ingredient, IngredientToRecipe, Recipe,
@@ -16,6 +15,7 @@ from users.models import FoodGramUser
 
 from .filters import IngredientStartsWithFilter, RecipeFilter
 from .pagination import CustomPagination
+from .permissions import AuthorOrReadOnlyPermission
 from .serializers import (FavoriteSerializer, IngredientSerializer,
                           PasswordSerializer, RecipeGetSerializer,
                           RecipePostSerializer, ShoppingListSerializer,
@@ -30,7 +30,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeGetSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (AuthorOrReadOnlyPermission, )
     pagination_class = CustomPagination
 
     @staticmethod
@@ -117,7 +117,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
         writer = csv.writer(response, delimiter='-')
         writer.writerow(['Наименование', 'Единица измерения', 'Количество'])
         for ingredient in ingredients:
-            print(ingredient)
             writer.writerow(
                 [ingredient['ingredient__name'],
                  ingredient['ingredient__measurement_unit'],

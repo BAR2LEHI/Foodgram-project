@@ -13,15 +13,13 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         max_length=200,
-        verbose_name='Название блюда',
-        unique=True
+        verbose_name='Название блюда'
     )
     image = models.ImageField(
         verbose_name='Картинка блюда',
     )
-    text = models.CharField(
-        max_length=1024,
-        verbose_name='Описание рецепта',
+    text = models.TextField(
+        verbose_name='Описание рецепта'
     )
     ingredients = models.ManyToManyField(
         'Ingredient',
@@ -35,27 +33,18 @@ class Recipe(models.Model):
     cooking_time = models.IntegerField(
         verbose_name='Время приготовления в минутах',
     )
-    is_in_shopping_cart = models.BooleanField(
-        verbose_name='В списке покупок',
-        default=False
-    )
-    is_favorited = models.BooleanField(
-        verbose_name='В избранном',
-        default=False
-    )
-
-    def __str__(self):
-        return f'{self.name}'
 
     class Meta:
         ordering = ['id', ]
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
+    def __str__(self):
+        return self.name
+
 
 class Tag(models.Model):
     name = models.CharField(
-        max_length=32,
         unique=True,
         verbose_name='Название тега'
     )
@@ -65,37 +54,34 @@ class Tag(models.Model):
         verbose_name='Код цвета'
     )
     slug = models.SlugField(
-        max_length=32,
         unique=True,
-        verbose_name='Слаг тега '
+        verbose_name='Слаг тега'
     )
-
-    def __str__(self):
-        return f'{self.name}'
 
     class Meta:
         ordering = ['id', ]
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
+    def __str__(self):
+        return self.name
+
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=128,
         verbose_name='Название ингредиента'
     )
     measurement_unit = models.CharField(
-        max_length=64,
         verbose_name='Единица меры'
     )
-
-    def __str__(self):
-        return f'{self.name}'
 
     class Meta:
         ordering = ['id', ]
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
+
+    def __str__(self):
+        return self.name
 
 
 class IngredientToRecipe(models.Model):
@@ -113,9 +99,6 @@ class IngredientToRecipe(models.Model):
         verbose_name='Количество ингр. в рецепте'
     )
 
-    def __str__(self):
-        return f'{self.ingredient} для {self.recipe}'
-
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -126,6 +109,9 @@ class IngredientToRecipe(models.Model):
         ordering = ['id', ]
         verbose_name = 'Связь рецепта и ингредиента'
         verbose_name_plural = 'Связи рецепта и ингредиента'
+
+    def __str__(self):
+        return f'{self.ingredient} для {self.recipe}'
 
 
 class Subscription(models.Model):
@@ -154,7 +140,7 @@ class Subscription(models.Model):
         verbose_name_plural = 'Подписки'
 
     def __str__(self):
-        return f'{self.followers} follow {self.following}'
+        return f'{self.followers} подписан на {self.following}'
 
 
 class FavoriteRecipe(models.Model):

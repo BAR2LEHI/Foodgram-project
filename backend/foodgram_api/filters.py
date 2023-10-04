@@ -5,16 +5,13 @@ from api.models import Ingredient, Recipe
 
 class RecipeFilter(django_filters.FilterSet):
     """Фильтр для рецептов"""
-    author = django_filters.NumberFilter(
-        field_name='author__id'
-    )
-    is_in_shopping_cart = django_filters.NumberFilter(
+    is_in_shopping_cart = django_filters.BooleanFilter(
         method='filter_is_in_shopping_cart'
     )
-    is_favorited = django_filters.NumberFilter(
+    is_favorited = django_filters.BooleanFilter(
         method='filter_is_favorited'
     )
-    tags = django_filters.CharFilter(
+    tags = django_filters.AllValuesMultipleFilter(
         field_name='tags__slug',
         lookup_expr='icontains'
     )
@@ -24,15 +21,14 @@ class RecipeFilter(django_filters.FilterSet):
         fields = ('author', 'is_favorited', 'is_in_shopping_cart', 'tags')
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
-        print(value)
-        if value == 1 and self.request.user.is_authenticated:
+        if value and self.request.user.is_authenticated:
             return queryset.filter(
                 shop_recipe__user=self.request.user.id
             )
         return queryset
 
     def filter_is_favorited(self, queryset, name, value):
-        if value == 1 and self.request.user.is_authenticated:
+        if value and self.request.user.is_authenticated:
             return queryset.filter(
                 favorite_recipes__user=self.request.user
             )

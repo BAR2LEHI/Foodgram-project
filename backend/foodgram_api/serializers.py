@@ -1,10 +1,10 @@
-import base64
-
 import webcolors
+from django.db import transaction
+from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+
 from api.models import (FavoriteRecipe, Ingredient, IngredientToRecipe, Recipe,
                         ShoppingList, Subscription, Tag)
-from django.core.files.base import ContentFile
-from rest_framework import serializers
 from users.models import FoodGramUser
 
 
@@ -19,16 +19,6 @@ class Hex2NameColor(serializers.Field):
         except ValueError:
             raise serializers.ValidationError('Для этого цвета нет имени')
         return data
-
-
-class Base64ImageField(serializers.ImageField):
-    """Поле для преобразования base64 в изображение"""
-    def to_internal_value(self, data):
-        if isinstance(data, str) and data.startswith('data:image'):
-            format, imgstr = data.split(';base64,')
-            ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
-        return super().to_internal_value(data)
 
 
 class UserShortSerializer(serializers.ModelSerializer):
@@ -85,8 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def get_recipes_count(self, obj):
-        count = Recipe.objects.filter(author__id=obj.id).count()
-        return count
+        return Recipe.objects.filter(author__id=obj.id).count() 
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
@@ -111,6 +100,7 @@ class UserPostSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('id',)
 
+    @transaction.atomic
     def create(self, validated_data):
         user = FoodGramUser.objects.create(
             **validated_data
@@ -278,7 +268,8 @@ class RecipePostSerializer(serializers.ModelSerializer):
             )
         return value
 
-    def create_ingredients(self, recipe, ingredients):
+    @staticmethod
+    def create_ingredients(recipe, ingredients):
         IngredientToRecipe.objects.bulk_create(
             [
                 IngredientToRecipe(
@@ -291,6 +282,7 @@ class RecipePostSerializer(serializers.ModelSerializer):
             ]
         )
 
+    @transaction.atomic
     def create(self, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
@@ -304,6 +296,7 @@ class RecipePostSerializer(serializers.ModelSerializer):
         recipe.tags.set(tags)
         return recipe
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
@@ -347,15 +340,15 @@ class SubscribeSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        user = data['followers'].pk
-        author = data['following'].pk
+        user = data['followers']
+        author = data['following']
         if user == author:
             raise serializers.ValidationError(
                 'Нельзя подписаться на самого себя'
             )
         if Subscription.objects.filter(
-            following__id=author,
-            followers__id=user
+            following=author,
+            followers=user
         ).exists():
             raise serializers.ValidationError(
                 'Вы уже подписаны на этого автора'
