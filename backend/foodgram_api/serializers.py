@@ -246,6 +246,7 @@ class RecipePostSerializer(serializers.ModelSerializer):
         read_only_fields = ('author',)
 
     def validate(self, data):
+        name = data['name']
         ingredients = data['ingredients']
         tags = data['tags']
         if not tags:
@@ -266,6 +267,8 @@ class RecipePostSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     'Указанного вами игредиента не существует'
                 )
+        if Recipe.objects.filter(name=name).exists():
+            raise serializers.ValidationError('Такой рецепт есть уже')
         return data
 
     def validate_cooking_time(self, value):
