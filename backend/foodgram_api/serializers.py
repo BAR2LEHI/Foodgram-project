@@ -311,11 +311,11 @@ class RecipePostSerializer(serializers.ModelSerializer):
 
 
 class PasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
+    current_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
     def validate(self, data):
-        if data['new_password'] == data['old_password']:
+        if data['new_password'] == data['current_password']:
             raise serializers.ValidationError(
                 'Новый пароль не должен совпадать со старым'
             )

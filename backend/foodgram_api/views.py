@@ -160,9 +160,9 @@ class UsersViewSet(viewsets.ModelViewSet):
         serializer = PasswordSerializer(data=request.data)
         if serializer.is_valid():
             if not user.check_password(
-                serializer.validated_data['old_password']
+                serializer.validated_data['current_password']
             ):
-                return Response({'old_password': 'Неверный пароль'})
+                return Response({'current_password': 'Неверный пароль'})
             user.set_password(serializer.validated_data['new_password'])
             user.save()
             return Response(status=status.HTTP_200_OK)
