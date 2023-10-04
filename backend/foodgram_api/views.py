@@ -70,7 +70,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=['post', 'delete'],
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def favorite(self, request, pk):
         """Метод добавления рецепта в избранное"""
@@ -83,7 +83,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=['post', 'delete'],
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def shopping_cart(self, request, pk):
         """Метод добавления рецепта в список покупок"""
@@ -98,7 +98,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=['get'],
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def download_shopping_cart(self, request):
         """Метод для скачивания файла с количеством необходимых ингредиентов"""
@@ -182,7 +182,7 @@ class UsersViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-    @action(detail=False, permission_classes=[IsAuthenticated,])
+    @action(detail=False, permission_classes=[IsAuthenticated, ])
     def subscriptions(self, request):
         """Метод для отображения подписок пользователя"""
         queryset = FoodGramUser.objects.filter(
@@ -228,7 +228,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=['post', 'delete'],
-        permission_classes=[IsAuthenticated,]
+        permission_classes=[IsAuthenticated, ]
     )
     def subscribe(self, request, pk):
         """Метод для подписки и отписки на пользователей"""

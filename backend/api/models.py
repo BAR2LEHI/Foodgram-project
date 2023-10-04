@@ -48,7 +48,7 @@ class Recipe(models.Model):
         return f'{self.name}'
 
     class Meta:
-        ordering = ['id',]
+        ordering = ['id', ]
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -74,7 +74,7 @@ class Tag(models.Model):
         return f'{self.name}'
 
     class Meta:
-        ordering = ['id',]
+        ordering = ['id', ]
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -93,7 +93,7 @@ class Ingredient(models.Model):
         return f'{self.name}'
 
     class Meta:
-        ordering = ['id',]
+        ordering = ['id', ]
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
@@ -123,7 +123,7 @@ class IngredientToRecipe(models.Model):
                 name='recipe_to_ingredient_unique'
             )
         ]
-        ordering = ['id',]
+        ordering = ['id', ]
         verbose_name = 'Связь рецепта и ингредиента'
         verbose_name_plural = 'Связи рецепта и ингредиента'
 
@@ -149,7 +149,7 @@ class Subscription(models.Model):
                 name='unique_subscription'
             )
         ]
-        ordering = ['id',]
+        ordering = ['id', ]
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
 
@@ -178,7 +178,7 @@ class FavoriteRecipe(models.Model):
                 name='unique_favorite'
             )
         ]
-        ordering = ['id',]
+        ordering = ['id', ]
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
 
@@ -207,7 +207,7 @@ class ShoppingList(models.Model):
                 name='unique_shop_recipe'
             )
         ]
-        ordering = ['id',]
+        ordering = ['id', ]
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
 
