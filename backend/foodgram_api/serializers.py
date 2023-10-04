@@ -75,7 +75,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
     def get_recipes_count(self, obj):
-        return Recipe.objects.filter(author__id=obj.id).count() 
+        return Recipe.objects.filter(author__id=obj.id).count()
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
