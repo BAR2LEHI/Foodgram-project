@@ -12,7 +12,7 @@ class Recipe(models.Model):
         verbose_name='Автор рецепта',
     )
     name = models.CharField(
-        max_length=128,
+        max_length=200,
         verbose_name='Название блюда',
         unique=True
     )
@@ -20,7 +20,7 @@ class Recipe(models.Model):
         verbose_name='Картинка блюда',
     )
     text = models.CharField(
-        max_length=128,
+        max_length=1024,
         verbose_name='Описание рецепта',
     )
     ingredients = models.ManyToManyField(

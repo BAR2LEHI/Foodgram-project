@@ -14,16 +14,16 @@ class FoodGramUser(AbstractUser):
     ]
 
     email = models.EmailField(
-        max_length=256,
+        max_length=254,
         unique=True,
         verbose_name='Адрес электронной почты'
     )
     first_name = models.CharField(
-        max_length=64,
+        max_length=150,
         verbose_name='Имя'
     )
     last_name = models.CharField(
-        max_length=64,
+        max_length=150,
         verbose_name='Фамилия'
     )
     role = models.CharField(

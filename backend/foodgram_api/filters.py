@@ -4,6 +4,7 @@ from api.models import Ingredient, Recipe
 
 
 class RecipeFilter(django_filters.FilterSet):
+    """Фильтр для рецептов"""
     author = django_filters.NumberFilter(
         field_name='author__id'
     )
@@ -39,6 +40,7 @@ class RecipeFilter(django_filters.FilterSet):
 
 
 class IngredientStartsWithFilter(django_filters.FilterSet):
+    """Фильтр для ингредиентов"""
     name = django_filters.CharFilter(
         field_name='name',
         lookup_expr='istartswith'

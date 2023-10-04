@@ -25,7 +25,8 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
-    queryset = Recipe.objects.all()
+    """Viewset для обработки всех запросов к Recipe"""
+    queryset = Recipe.objects.all().order_by('-id')
     serializer_class = RecipeGetSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
@@ -34,6 +35,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     @staticmethod
     def post_method_for_actions(request, pk, serializers):
+        """Статический метод POST для actions"""
         if serializers == FavoriteSerializer:
             data = {
                 'user': request.user.pk,
@@ -52,6 +54,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
     @staticmethod
     def delete_method_for_actions(model, user, recipe):
+        """Статический метод DELETE для actions"""
         if model == FavoriteRecipe:
             model.objects.filter(
                 user=user,
@@ -70,6 +73,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated,]
     )
     def favorite(self, request, pk):
+        """Метод добавления рецепта в избранное"""
         user = self.request.user
         recipe = get_object_or_404(Recipe, id=pk)
         if request.method == 'DELETE':
@@ -82,6 +86,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated,]
     )
     def shopping_cart(self, request, pk):
+        """Метод добавления рецепта в список покупок"""
         user = self.request.user
         recipe = get_object_or_404(Recipe, id=pk)
         if request.method == 'DELETE':
@@ -96,6 +101,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated,]
     )
     def download_shopping_cart(self, request):
+        """Метод для скачивания файла с количеством необходимых ингредиентов"""
         ingredients = IngredientToRecipe.objects.filter(
             recipe__shop_recipe__user=self.request.user
         ).values(
@@ -137,11 +143,13 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
+    """Viewset для обработки GET-запросов к Tags"""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+    """Viewset для обработки GET-запросов к Ingredients"""
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend,)
@@ -149,6 +157,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class UsersViewSet(viewsets.ModelViewSet):
+    """Viewset для обработки GET, POST - запросов к FoodGramUser"""
     queryset = FoodGramUser.objects.all()
     serializer_class = UserShortSerializer
     pagination_class = CustomPagination
@@ -156,6 +165,7 @@ class UsersViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'])
     def set_password(self, request):
+        """Метод для изменения пароля пользователя"""
         user = self.request.user
         serializer = PasswordSerializer(data=request.data)
         if serializer.is_valid():
@@ -174,6 +184,7 @@ class UsersViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, permission_classes=[IsAuthenticated,])
     def subscriptions(self, request):
+        """Метод для отображения подписок пользователя"""
         queryset = FoodGramUser.objects.filter(
             following__followers=request.user
         )
@@ -194,6 +205,7 @@ class UsersViewSet(viewsets.ModelViewSet):
 
     @staticmethod
     def post_method_for_subscribe(request, pk, serializers):
+        """Статический метод POST для подписки на пользователя"""
         data = {
             'following': pk,
             'followers': request.user.pk
@@ -206,6 +218,7 @@ class UsersViewSet(viewsets.ModelViewSet):
 
     @staticmethod
     def delete_method_for_subscribe(model, user, author):
+        """Статический метод DELETE для подписки на пользователя"""
         model.objects.filter(
             following=author,
             followers=user
@@ -218,6 +231,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated,]
     )
     def subscribe(self, request, pk):
+        """Метод для подписки и отписки на пользователей"""
         user = self.request.user
         author = get_object_or_404(FoodGramUser, id=pk)
         if request.method == 'DELETE':

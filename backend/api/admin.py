@@ -12,6 +12,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'name',
         'text',
         'cooking_time',
+        'favorite_count'
     )
     list_filter = (
         'author',
@@ -23,6 +24,11 @@ class RecipeAdmin(admin.ModelAdmin):
         'tags'
     )
     empty_value_display = '-пусто-'
+
+    def favorite_count(self, obj):
+        return FavoriteRecipe.objects.filter(
+            favorite_recipe=obj
+        ).count()
 
 
 @admin.register(Tag)
