@@ -8,7 +8,7 @@ class RecipeFilter(django_filters.FilterSet):
     is_in_shopping_cart = django_filters.BooleanFilter(
         method='filter_is_in_shopping_cart'
     )
-    is_favorited = django_filters.BooleanFilter(
+    is_favorited = django_filters.NumberFilter(
         method='filter_is_favorited'
     )
     tags = django_filters.AllValuesMultipleFilter(
@@ -28,7 +28,13 @@ class RecipeFilter(django_filters.FilterSet):
         return queryset
 
     def filter_is_favorited(self, queryset, name, value):
-        if value and self.request.user.is_authenticated:
+        # Дмитрий, не могу понять в чём проблема,
+        # локально через booleanfilter всё работает,
+        # но на сервере работает только список покупок,
+        # хотя оба метода идентичны везде.
+        # Помощь в пачке не спасла, с numberfilter всё работает корректно.
+        # Прошу прощения за вопрос таким образом
+        if value == 1 and self.request.user.is_authenticated:
             return queryset.filter(
                 favorite_recipes__user=self.request.user
             )
