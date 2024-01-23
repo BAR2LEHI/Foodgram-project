@@ -28,12 +28,6 @@ class RecipeFilter(django_filters.FilterSet):
         return queryset
 
     def filter_is_favorited(self, queryset, name, value):
-        # Дмитрий, не могу понять в чём проблема,
-        # локально через booleanfilter всё работает,
-        # но на сервере работает только список покупок,
-        # хотя оба метода идентичны везде.
-        # Помощь в пачке не спасла, с numberfilter всё работает корректно.
-        # Прошу прощения за вопрос таким образом
         if value == 1 and self.request.user.is_authenticated:
             return queryset.filter(
                 favorite_recipes__user=self.request.user
